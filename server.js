@@ -10,7 +10,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/blog-posts', blogPostsRouter);
-app.use('/blog-posts/:id', blogPostsRouter);
 
 app.listen(8000, function(){
     console.log('Listening on port ' + 8000);

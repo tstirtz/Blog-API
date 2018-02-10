@@ -16,6 +16,75 @@ BlogPosts.create(
 
 router.get('/', (req, res) => {
     res.json(BlogPosts.get());
-})
+});
+
+router.post('/', jsonParser, (req, res) =>{
+    const requiredFields = ['title', 'content', 'author'];
+
+    for(i=0; i <= requiredFields.length; i++){
+        let field = requiredFields[i];
+        if(!(field in req.body)){
+            let message = `Missing ${field} in request body.`;
+            console.log(message);
+            return res.status(400).send(message);
+        }
+    //if all required fields are present post the new data to BlogPosts.create
+    const item = BlogPosts.create(req.body.title, req.body.content, req.body.author);
+
+    res.status(201).json(item);
+
+    }
+});
+
+//Delete blog posts by id
+
+router.delete('/:id', (req, res) =>{
+    const requestId = req.params.id;
+    // console.log(BlogPosts[0]["id"]);
+    //
+    // for(i=0; i <= BlogPosts.length; i++){
+    //     if(!(requestId in BlogPosts[i].id)){
+    //         const message = `${requestId} must match a current Id.`;
+    //         console.log(message);
+    //         res.status(400).send(message);
+    //     }
+    // }
+    //delete specified item if it does
+    BlogPosts.delete(requestId);
+    const message = `Deleted blog post item ${requestId}.`;
+    console.log(message);
+    res.status(204).end();
+});
+
+router.put('/:id', jsonParser, (req, res) => {
+    //check that required fields are present
+    const requiredFields = ['id', 'title', 'content', 'author'];
+
+    for(i=0; i < requiredFields.length; i++){
+        const field = requiredFields[i];
+        if(!(field in req.body)){
+            const message = `Request body must contain "${field}"`;
+            console.log(message);
+            return res.status(400).send(message);
+        }
+    }
+
+    //check that params.id and body.id match
+    //send error message if they don't
+    if(req.params.id !== req.body.id){
+        const message = `Request path id ${req.params.id} and request body id must match`;
+        return res.status(400).send(message);
+    }
+    //else BlogPosts.updata object
+    console.log(`Updating list item ${req.params.id}`);
+    const updatedItem = BlogPosts.update({
+        id: req.params.id,
+        title: req.body.title,
+        content: req.body.content,
+        author: req.body.author
+    });
+
+    res.status(204).end();
+});
 
 module.exports = router;
