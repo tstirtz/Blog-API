@@ -30,5 +30,30 @@ describe('BlogPost', function(){
             });
     });
 
+    it('should add new blog post on POST', function(){
+        const newPost = {
+            title: 'Test',
+            content:'legam irure labore veniam cillum multos legam nulla sunt illum ipsum summis irure quae sint quis quid sint dolore quem',
+            author: 'Tyler S.'
+        };
+        return chai.request(app)
+            .post('/blog-posts')
+            .send(newPost) //send new post to test
+            .then(function(res){
+                //expect status code 201
+                expect(res).to.have.status(201);
+                //expect to be json
+                expect(res).to.be.json;
+                //expect to an object
+                expect(res.body).to.be.a('object');
+                //expect body to contain keys title content and author to be present
+                expect(res.body).to.include.keys('id', 'title', 'content', 'author');
+                //expect id to be present in response
+                expect(res.body.id).to.not.equal(null);
+                //expect response to deep equal newPost if id is added to newPost
+                expect(res.body).to.deep.equal(Object.assign(newPost, {id: res.body.id, publishDate: res.body.publishDate}));
+            });
+    });
+
 
 });
