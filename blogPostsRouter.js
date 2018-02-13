@@ -85,6 +85,7 @@ router.put('/:id', jsonParser, (req, res) => {
     });
 
     res.status(204).end();
+    //res.status(204).send(updatedItem) won't return updatedItem in the response?
 });
 
 module.exports = router;

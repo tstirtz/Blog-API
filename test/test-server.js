@@ -55,5 +55,34 @@ describe('BlogPost', function(){
             });
     });
 
+    it('should update existing blog post on PUT', function(){
+        const updatePost = {
+            title: 'Foo',
+            content: 'Bar',
+            author: 'Bizz Bang'
+        };
+
+        return chai.request(app)
+            .get('/blog-posts')
+            .then(function(res){
+                updatePost.id = res.body[0].id;
+                return chai.request(app)
+                    .put(`/blog-posts/${updatePost.id}`)
+                    .send(updatePost);
+            })
+            .then(function(res){
+                //expect status code of 204
+                expect(res).to.have.status(204);
+                        //expect res to be json
+                // expect(res).to.be.json;
+                        //expect res.body to be a Object
+                // expect(res.body).to.be.a('object');
+                //         //expect req id to match an existing id
+                // expect(res.body).to.deep.equal(updatePost);
+            });
+
+
+        });
+
 
 });
