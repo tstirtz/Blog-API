@@ -80,9 +80,29 @@ describe('BlogPost', function(){
                 //         //expect req id to match an existing id
                 // expect(res.body).to.deep.equal(updatePost);
             });
-
-
         });
+
+    it('should delete existing blog post on DELETE', function(){
+        const deletePost = {
+            title: 'Foo',
+            content: 'Bar',
+            author: 'Bizz Bang'
+        };
+
+        return chai.request(app)
+            .get('/blog-posts')
+            .then(function(res){
+                deletePost.id = res.body[0].id;
+                return chai.request(app) //I don't understand why we need to
+                                            //return chai.request(app) here
+                    .delete(`/blog-posts/${deletePost.id}`)
+                    .send(deletePost)
+            })
+            .then(function(res){
+                //expect res to have status 204
+                expect(res).to.have.status(204);
+            });
+    });
 
 
 });
